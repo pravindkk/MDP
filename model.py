@@ -10,6 +10,80 @@ import string
 import numpy as np
 import random
 
+name_to_id = {
+    "NA": 'NA',
+    "id99": 10,
+    "id11": 11,
+    "id12": 12,
+    "id13": 13,
+    "id14": 14,
+    "id15": 15,
+    "id16": 16,
+    "id17": 17,
+    "id18": 18,
+    "id19": 19,
+    "id20": 20,
+    "id21": 21,
+    "id22": 22,
+    "id23": 23,
+    "id24": 24,
+    "id25": 25,
+    "id26": 26,
+    "id27": 27,
+    "id28": 28,
+    "id29": 29,
+    "id30": 30,
+    "id31": 31,
+    "id32": 32,
+    "id33": 33,
+    "id34": 34,
+    "id35": 35,
+    "id36": 36,
+    "id37": 37,
+    "id38": 38,
+    "id39": 39,
+    "id40": 40
+}
+
+# name_to_id = {
+#     "NA": 'NA',
+#     "Bullseye": 10,
+#     "One": 11,
+#     "Two": 12,
+#     "Three": 13,
+#     "Four": 14,
+#     "Five": 15,
+#     "Six": 16,
+#     "Seven": 17,
+#     "Eight": 18,
+#     "Nine": 19,
+#     "A": 20,
+#     "B": 21,
+#     "C": 22,
+#     "D": 23,
+#     "E": 24,
+#     "F": 25,
+#     "G": 26,
+#     "H": 27,
+#     "S": 28,
+#     "T": 29,
+#     "U": 30,
+#     "V": 31,
+#     "W": 32,
+#     "X": 33,
+#     "Y": 34,
+#     "Z": 35,
+#     "Up": 36,
+#     "Down": 37,
+#     "Right": 38,
+#     "Left": 39,
+#     "Up Arrow": 36,
+#     "Down Arrow": 37,
+#     "Right Arrow": 38,
+#     "Left Arrow": 39,
+#     "Stop": 40
+# }
+
 def get_random_string(length):
     """
     Generate a random string of fixed length 
@@ -31,7 +105,7 @@ def load_model():
     Load the model from the local directory
     """
     #model = torch.hub.load('./', 'custom', path='YOLOv5_new.pt', source='local')
-    model = torch.hub.load('./', 'custom', path='Week_9.pt', source='local')
+    model = torch.hub.load('./', 'custom', path='best.pt', source='local')
     return model
 
 def draw_own_bbox(img,x1,y1,x2,y2,label,color=(36,255,12),text_color=(0,0,0)):
@@ -61,44 +135,6 @@ def draw_own_bbox(img,x1,y1,x2,y2,label,color=(36,255,12),text_color=(0,0,0)):
     None
 
     """
-    name_to_id = {
-        "NA": 'NA',
-        "Bullseye": 10,
-        "One": 11,
-        "Two": 12,
-        "Three": 13,
-        "Four": 14,
-        "Five": 15,
-        "Six": 16,
-        "Seven": 17,
-        "Eight": 18,
-        "Nine": 19,
-        "A": 20,
-        "B": 21,
-        "C": 22,
-        "D": 23,
-        "E": 24,
-        "F": 25,
-        "G": 26,
-        "H": 27,
-        "S": 28,
-        "T": 29,
-        "U": 30,
-        "V": 31,
-        "W": 32,
-        "X": 33,
-        "Y": 34,
-        "Z": 35,
-        "Up": 36,
-        "Down": 37,
-        "Right": 38,
-        "Left": 39,
-        "Up Arrow": 36,
-        "Down Arrow": 37,
-        "Right Arrow": 38,
-        "Left Arrow": 39,
-        "Stop": 40
-    }
     # Reformat the label to {label name}-{label id}
     label = label + "-" + str(name_to_id[label])
     # Convert the coordinates to int
@@ -165,6 +201,7 @@ def predict_image(image, model, signal):
         
         # Initialize prediction to NA
         pred = 'NA'
+        print(results)
 
         # Ignore Bullseye unless they are the only image detected and select the last label in the list (the last label will be the one with the largest bbox height)
         if len(pred_list) == 1:
@@ -222,46 +259,9 @@ def predict_image(image, model, signal):
         
         # Draw the bounding box on the image
         if not isinstance(pred,str):
+            print('ok')
             draw_own_bbox(np.array(img), pred['xmin'], pred['ymin'], pred['xmax'], pred['ymax'], pred['name'])
 
-        name_to_id = {
-            "NA": 'NA',
-            "Bullseye": 10,
-            "One": 11,
-            "Two": 12,
-            "Three": 13,
-            "Four": 14,
-            "Five": 15,
-            "Six": 16,
-            "Seven": 17,
-            "Eight": 18,
-            "Nine": 19,
-            "A": 20,
-            "B": 21,
-            "C": 22,
-            "D": 23,
-            "E": 24,
-            "F": 25,
-            "G": 26,
-            "H": 27,
-            "S": 28,
-            "T": 29,
-            "U": 30,
-            "V": 31,
-            "W": 32,
-            "X": 33,
-            "Y": 34,
-            "Z": 35,
-            "Up": 36,
-            "Down": 37,
-            "Right": 38,
-            "Left": 39,
-            "Up Arrow": 36,
-            "Down Arrow": 37,
-            "Right Arrow": 38,
-            "Left Arrow": 39,
-            "Stop": 40
-        }
         # If pred is not a string, i.e. a prediction was made and pred is not 'NA'
         if not isinstance(pred,str):
             image_id = str(name_to_id[pred['name']])
