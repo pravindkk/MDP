@@ -12,37 +12,37 @@ import random
 
 name_to_id = {
     "NA": 'NA',
-    "id99": 10,
-    "id11": 11,
-    "id12": 12,
-    "id13": 13,
-    "id14": 14,
-    "id15": 15,
-    "id16": 16,
-    "id17": 17,
-    "id18": 18,
-    "id19": 19,
-    "id20": 20,
-    "id21": 21,
-    "id22": 22,
-    "id23": 23,
-    "id24": 24,
-    "id25": 25,
-    "id26": 26,
-    "id27": 27,
-    "id28": 28,
-    "id29": 29,
-    "id30": 30,
-    "id31": 31,
-    "id32": 32,
-    "id33": 33,
-    "id34": 34,
-    "id35": 35,
-    "id36": 36,
-    "id37": 37,
-    "id38": 38,
-    "id39": 39,
-    "id40": 40
+    "99": 10,
+    "11": 11,
+    "12": 12,
+    "13": 13,
+    "14": 14,
+    "15": 15,
+    "16": 16,
+    "17": 17,
+    "18": 18,
+    "19": 19,
+    "20": 20,
+    "21": 21,
+    "22": 22,
+    "23": 23,
+    "24": 24,
+    "25": 25,
+    "26": 26,
+    "27": 27,
+    "28": 28,
+    "29": 29,
+    "30": 30,
+    "31": 31,
+    "32": 32,
+    "33": 33,
+    "34": 34,
+    "35": 35,
+    "36": 36,
+    "37": 37,
+    "38": 38,
+    "39": 39,
+    "40": 40
 }
 
 # name_to_id = {
@@ -105,7 +105,7 @@ def load_model():
     Load the model from the local directory
     """
     #model = torch.hub.load('./', 'custom', path='YOLOv5_new.pt', source='local')
-    model = torch.hub.load('./', 'custom', path='best.pt', source='local')
+    model = torch.hub.load('./', 'custom', path='new_best.pt', source='local')
     return model
 
 def draw_own_bbox(img,x1,y1,x2,y2,label,color=(36,255,12),text_color=(0,0,0)):
@@ -279,6 +279,7 @@ def predict_image_week_9(image, model):
     img = Image.open(os.path.join('uploads', image))
     # Run inference
     results = model(img)
+    print(results)
     # Save the results
     results.save('runs')
     # Convert the results to a dataframe
@@ -305,14 +306,14 @@ def predict_image_week_9(image, model):
             draw_own_bbox(np.array(img), pred['xmin'], pred['ymin'], pred['xmax'], pred['ymax'], pred['name'])
         
     # Dictionary is shorter as only two symbols, left and right are needed
-    name_to_id = {
-        "NA": 'NA',
-        "Bullseye": 10,
-        "Right": 38,
-        "Left": 39,
-        "Right Arrow": 38,
-        "Left Arrow": 39,
-    }
+    # name_to_id = {
+    #     "NA": 'NA',
+    #     "Bullseye": 10,
+    #     "Right": 38,
+    #     "Left": 39,
+    #     "Right Arrow": 38,
+    #     "Left Arrow": 39,
+    # }
     # Return the image id
     if not isinstance(pred,str):
         image_id = str(name_to_id[pred['name']])
@@ -346,7 +347,7 @@ def stitch_image():
         stitchedImg.paste(im, (x_offset, 0))
         x_offset += im.size[0]
     # Save the stitched image to the path
-    stitchedImg.save(stitchedPath)
+    # stitchedImg.save(stitchedPath)
 
     # Move original images to "originals" subdirectory
     for img in imgPaths:
@@ -379,7 +380,7 @@ def stitch_image_own():
     for im in images:
         stitchedImg.paste(im, (x_offset, 0))
         x_offset += im.size[0]
-    stitchedImg.save(stitchedPath)
+    # stitchedImg.save(stitchedPath)
 
     return stitchedImg
 
