@@ -41,7 +41,7 @@ def path_finding():
     # for ob in obstacles:
     #     maze_solver.add_obstacle(ob['x'], ob['y'], ob['d'], ob['id'])
 
-    optimal_path = AlgoFunctions.NearestNeighbourSearch()
+    optimal_path = AlgoFunctions.NearestNeighbourSearch(obstacles)
 
     # start = time.time()
     # # Get shortest path
