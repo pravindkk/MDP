@@ -1,0 +1,6 @@
+own_results/*.jpg
+runs/originals/*.jpg
+uploads/*.jpg
+models/__pycache__/*.pyc
+__pycache__/*pyc
+utils/__pycache__/*pyc

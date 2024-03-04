@@ -1,5 +1,6 @@
 import time
-from algo.algo import MazeSolver 
+from algo.algo import MazeSolver
+from algo.AlgoTask1 import AlgoFunctions 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from model import *
@@ -42,7 +43,8 @@ def path_finding():
     #     maze_solver.add_obstacle(ob['x'], ob['y'], ob['d'], ob['id'])
 
     optimal_path = AlgoFunctions.NearestNeighbourSearch(obstacles)
-
+    print('Testing 1',optimal_path)
+    return optimal_path
     # start = time.time()
     # # Get shortest path
     # optimal_path, distance = maze_solver.get_optimal_order_dp(retrying=retrying)
@@ -72,7 +74,7 @@ def path_finding():
     #     "data": {
     #         'distance': distance,
     #         'path': path_results,
-    #         'commands': commands
+    #         'commands': optimal_path
     #     },
     #     "error": None
     # })

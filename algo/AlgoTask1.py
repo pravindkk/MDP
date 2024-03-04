@@ -129,7 +129,7 @@ class AlgoFunctions():
 
         #print("Checking Output Data:", data)
 
-        obstacles = [(obstacle['x'], obstacle['y'], obstacle['id'],obstacle['d']) for obstacle in data]
+        obstacles = [(obstacle['x'], obstacle['y'], obstacle['d'], obstacle['id']) for obstacle in data]
 
         #print("Checking Output Obstacles:", obstacles)
 
@@ -146,21 +146,35 @@ class AlgoFunctions():
         # Initialize a 20x20 grid with all zeros
         grid = [[' '] * 20 for _ in range(20)]
 
+        temp = []
+
         # Mark obstacles on the grid
         for obstacle in obstacles:
-            x, y, id, direction = obstacle
-
-            if(obstacle[3] == 0):
-                #grid[x][y] = obstacle[2].upper()  # Marking obstacle at the specified position
-                grid[x][y] = 'N'
-            elif(obstacle[3] == 2):
-                grid[x][y] = 'E'
-            elif(obstacle[3] == 4):
-                grid[x][y] = 'S'
-            else:
-                grid[x][y] = 'W'
-
             
+            obstacle = list(obstacle)
+            obstacle[1] = 20 - obstacle[1]
+            x, y, direction,id = obstacle
+
+            if(obstacle[2] == 0):
+                #grid[x][y] = obstacle[2].upper()  # Marking obstacle at the specified position
+                obstacle[2] = 'N'
+            elif(obstacle[2] == 2):
+                obstacle[2] = 'E'
+            elif(obstacle[2] == 4):
+                obstacle[2] = 'S'
+            else:
+                obstacle[2] = 'W'
+
+            grid[x][y] = obstacle[2]
+
+            obstacle = tuple(obstacle)
+
+            temp.append((y,x,obstacle[2],id))
+
+        obstacles = temp
+
+        print("Fucking chibai kia ", obstacles)
+
         # Create an Object3x3 instance from within the function
         object_instance = Object3x3(center_x=18, center_y=1)
 
@@ -188,7 +202,7 @@ class AlgoFunctions():
                         dist = AlgoFunctions.calculateDistancebtwnCoordinates(starting_coordinates[0], starting_coordinates[1], obstacles[i][0], obstacles[i][1])
                         shortestNode = obstacles[i]
             # print("startingNode", starting_coordinates)
-            # print("ShortestNode", shortestNode)
+            print("ShortestNode", shortestNode)
             start = starting_coordinates
             if shortestNode[2].upper() == 'N':
                 starting_coordinates = (shortestNode[0] - 3, shortestNode[1], 'S')
@@ -205,7 +219,7 @@ class AlgoFunctions():
             # print("targetNode", target)
             path_result, action_result = AlgoFunctions.AStarSearch(grid, start, target, object_instance.get_positions())
             if path_result:
-                path.append(path_result) #?
+                path.append((path_result,shortestNode[3])) #?
                 #print("Output Path:", path)
                 obstacles.remove(shortestNode)
                 fail = None
@@ -228,7 +242,7 @@ class AlgoFunctions():
 
         modified_action = AlgoFunctions.count_repeated_commands(new_action)
 
-        json_action = {'commands': str(modified_action)}
+        json_action = {"data":{'path':path,'distance':0,'commands': str(modified_action)}}
 
         print("Checking Json:", json_action)
 
@@ -242,7 +256,7 @@ class AlgoFunctions():
 
         # Run this return to return json of commands instead of path & grid
         
-        # return json_action
+        return json_action
 
         # Make sure to command out the below return path, even though redundant
 
