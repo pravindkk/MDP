@@ -129,7 +129,7 @@ class AlgoFunctions():
 
         #print("Checking Output Data:", data)
 
-        obstacles = [(obstacle['x'], obstacle['y'], obstacle['id'],obstacle['d']) for obstacle in data['obstacles']]
+        obstacles = [(obstacle['x'], obstacle['y'], obstacle['id'],obstacle['d']) for obstacle in data]
 
         #print("Checking Output Obstacles:", obstacles)
 
