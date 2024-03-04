@@ -129,7 +129,7 @@ class AlgoFunctions():
 
         #print("Checking Output Data:", data)
 
-        obstacles = [(obstacle['x'], obstacle['y'], obstacle['d']) for obstacle in data['obstacles']]
+        obstacles = [(obstacle['x'], obstacle['y'], obstacle['id'],obstacle['d']) for obstacle in data['obstacles']]
 
         #print("Checking Output Obstacles:", obstacles)
 
@@ -148,8 +148,18 @@ class AlgoFunctions():
 
         # Mark obstacles on the grid
         for obstacle in obstacles:
-            x, y, direction = obstacle
-            grid[x][y] = obstacle[2].upper()  # Marking obstacle at the specified position
+            x, y, id, direction = obstacle
+
+            if(obstacle[3] == 0):
+                #grid[x][y] = obstacle[2].upper()  # Marking obstacle at the specified position
+                grid[x][y] = 'N'
+            elif(obstacle[3] == 2):
+                grid[x][y] = 'E'
+            elif(obstacle[3] == 4):
+                grid[x][y] = 'S'
+            else:
+                grid[x][y] = 'W'
+
             
         # Create an Object3x3 instance from within the function
         object_instance = Object3x3(center_x=18, center_y=1)
