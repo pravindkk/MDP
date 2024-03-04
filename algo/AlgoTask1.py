@@ -1,5 +1,4 @@
 import heapq
-import json
 import time
 
 
@@ -68,71 +67,9 @@ class AlgoFunctions():
                 for row in grid:
                     print(row)
         return None
-
+    
     @staticmethod
-    def count_repeated_commands(action):
-        # Initialize an empty list to store the modified action
-        modified_action = []
-        # Initialize the previous command and its count
-        prev_command = None
-        count =   0
-
-        # Iterate over the action list
-        for command in action:
-            # If the current command is the same as the previous one, increment the count
-            if command == prev_command:
-                count +=   1
-            else:
-                # If the previous command is not None and not 'SNAP' or 'STOP', append it with its count to the modified action
-                if prev_command is not None and prev_command not in ['SNAP', 'STOP']:
-                    # Append the count to the command and pad with a zero at the end if it's a single digit
-                    # For 'FR', 'FL', 'BL', and 'BR', the count is always '00'
-                    if prev_command in ['FR', 'FL', 'BL', 'BR']:
-                        modified_action.append(f"{prev_command}00")
-                    else:
-                        if(count>10):
-                            # Append the first part of the count with  10 to the command
-                            modified_action.append(f"{prev_command}90")
-                            # Append the second part of the count with the remainder to the command
-                            modified_action.append(f"{prev_command}{count -  9}0")
-                        else:
-                            modified_action.append(f"{prev_command}{count}{'0' if count < 10 else ''}")
-                # If the previous command is 'SNAP' or 'STOP', append it without a count
-                elif prev_command in ['SNAP', 'STOP']:
-                    modified_action.append(prev_command)
-                # Reset the count and set the current command as the previous command
-                count =   1
-                prev_command = command
-
-        # Append the last command with its count to the modified action
-        if prev_command is not None and prev_command not in ['SNAP', 'STOP']:
-            # Append the count to the command and pad with a zero at the end if it's a single digit
-            # For 'FR', 'FL', 'BL', and 'BR', the count is always '00'
-            if prev_command in ['FR', 'FL', 'BL', 'BR']:
-                modified_action.append(f"{prev_command}00")
-            else:
-                if(count>10):
-                    # Append the first part of the count with  10 to the command
-                    modified_action.append(f"{prev_command}90")
-                    # Append the second part of the count with the remainder to the command
-                    modified_action.append(f"{prev_command}{count -  9}0")
-                else:
-                    modified_action.append(f"{prev_command}{count}{'0' if count <   10 else ''}")
-        elif prev_command in ['SNAP', 'STOP']:
-            modified_action.append(prev_command)
-
-        return modified_action
-
-
-    @staticmethod
-    def NearestNeighbourSearch(data):
-
-        #print("Checking Output Data:", data)
-
-        obstacles = [(obstacle['x'], obstacle['y'], obstacle['d'], obstacle['id']) for obstacle in data]
-
-        #print("Checking Output Obstacles:", obstacles)
-
+    def NearestNeighbourSearch(obstacles):
         if not obstacles:
             print("No obstacles found.")
             return []
@@ -146,35 +83,11 @@ class AlgoFunctions():
         # Initialize a 20x20 grid with all zeros
         grid = [[' '] * 20 for _ in range(20)]
 
-        temp = []
-
         # Mark obstacles on the grid
         for obstacle in obstacles:
+            x, y, direction = obstacle
+            grid[x][y] = obstacle[2].upper()  # Marking obstacle at the specified position
             
-            obstacle = list(obstacle)
-            obstacle[1] = 20 - obstacle[1]
-            x, y, direction,id = obstacle
-
-            if(obstacle[2] == 0):
-                #grid[x][y] = obstacle[2].upper()  # Marking obstacle at the specified position
-                obstacle[2] = 'N'
-            elif(obstacle[2] == 2):
-                obstacle[2] = 'E'
-            elif(obstacle[2] == 4):
-                obstacle[2] = 'S'
-            else:
-                obstacle[2] = 'W'
-
-            grid[x][y] = obstacle[2]
-
-            obstacle = tuple(obstacle)
-
-            temp.append((y,x,obstacle[2],id))
-
-        obstacles = temp
-
-        print("Fucking chibai kia ", obstacles)
-
         # Create an Object3x3 instance from within the function
         object_instance = Object3x3(center_x=18, center_y=1)
 
@@ -202,7 +115,7 @@ class AlgoFunctions():
                         dist = AlgoFunctions.calculateDistancebtwnCoordinates(starting_coordinates[0], starting_coordinates[1], obstacles[i][0], obstacles[i][1])
                         shortestNode = obstacles[i]
             # print("startingNode", starting_coordinates)
-            print("ShortestNode", shortestNode)
+            # print("ShortestNode", shortestNode)
             start = starting_coordinates
             if shortestNode[2].upper() == 'N':
                 starting_coordinates = (shortestNode[0] - 3, shortestNode[1], 'S')
@@ -219,8 +132,8 @@ class AlgoFunctions():
             # print("targetNode", target)
             path_result, action_result = AlgoFunctions.AStarSearch(grid, start, target, object_instance.get_positions())
             if path_result:
-                path.append((path_result,shortestNode[3])) #?
-                #print("Output Path:", path)
+                path.append(path_result) #?
+                print("Path:", path)
                 obstacles.remove(shortestNode)
                 fail = None
             else:
@@ -229,47 +142,17 @@ class AlgoFunctions():
             # for row in grid:
             #     print(row)
             if action_result:
-                #print('What is action_result: ', action_result)
                 action.append(action_result)
-                #print("Action: ", action)
-
+                print("Action: ", action)
             dist = 999
             shortestNode = []
 
-            new_action = [j for sub in action for j in sub]
-
-        new_action.append('STOP')
-
-        modified_action = AlgoFunctions.count_repeated_commands(new_action)
-
-        json_action = {"data":{'path':path,'distance':0,'commands': str(modified_action)}}
-
-        print("Checking Json:", json_action)
-
-        # AlgoFunctions.print_grid(path, reference_obstacles)
-
-        ########################################################################
-        ########################################################################
-        ########################################################################
-        ########################################################################
-        ########################################################################
-
-        # Run this return to return json of commands instead of path & grid
-        
-        return json_action
-
-        # Make sure to command out the below return path, even though redundant
-
-        ########################################################################
-        ########################################################################
-        ########################################################################
-        ########################################################################
-        ########################################################################
+       # AlgoFunctions.print_grid(path, reference_obstacles)
 
         return path, grid
 
     @staticmethod
-    def AStarSearch(grid, start, target, object_positions, timeout = 60):
+    def AStarSearch(grid, start, target, object_positions, timeout = 30):
 
         def is_valid_move(x, y, direction, orientation, grid):
             # Forward movement
@@ -301,17 +184,18 @@ class AlgoFunctions():
             new_y = y
             # Check if the turn is valid
             if direction == 'L':
-                # Move up by 1
-                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
-                    return False
-                if orientation == 'N':
-                    new_x -= 1
-                elif orientation == 'S':
-                    new_x += 1
-                elif orientation == 'E':
-                    new_y += 1
-                elif orientation == 'W':
-                    new_y -= 1
+                # Move up by 2
+                for i in range(2):
+                    if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                        return False
+                    if orientation == 'N':
+                        new_x -= 1
+                    elif orientation == 'S':
+                        new_x += 1
+                    elif orientation == 'E':
+                        new_y += 1
+                    elif orientation == 'W':
+                        new_y -= 1
 
                 # Rotate counterclockwise
                 if orientation == 'N':
@@ -328,7 +212,7 @@ class AlgoFunctions():
                     orientation = 'S'
 
                 # Move forward by 3 cells
-                for i in range(3):
+                for i in range(4):
                     if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
                         return False
                     if orientation == 'N':
@@ -343,17 +227,18 @@ class AlgoFunctions():
                 return True
 
             elif direction == 'R':
-                # Move up by 1
-                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
-                    return False
-                if orientation == 'N':
-                    new_x -= 1
-                elif orientation == 'S':
-                    new_x += 1
-                elif orientation == 'E':
-                    new_y += 1
-                elif orientation == 'W':
-                    new_y -= 1
+                # Move up by 2
+                for i in range(2):
+                    if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                        return False
+                    if orientation == 'N':
+                        new_x -= 1
+                    elif orientation == 'S':
+                        new_x += 1
+                    elif orientation == 'E':
+                        new_y += 1
+                    elif orientation == 'W':
+                        new_y -= 1
                 
                 # Rotate clockwise
                 if orientation == 'N':
@@ -370,7 +255,7 @@ class AlgoFunctions():
                     orientation = 'N'
                 
                 # Move forward by 3 cells
-                for i in range(3):
+                for i in range(4):
                     if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
                         return False
                     if orientation == 'N':
@@ -390,6 +275,8 @@ class AlgoFunctions():
             # Check if the turn is valid
             if direction == 'R':
                 # Move backward by 3 cells
+                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                    return False
                 for i in range(3):
                     if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
                         return False
@@ -416,21 +303,24 @@ class AlgoFunctions():
                     new_x, new_y = new_x + 1, new_y + 1
                     orientation = 'S'
 
-                # Move up by 1
-                if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
-                    return False
-                if orientation == 'N':
-                    new_x += 1
-                elif orientation == 'S':
-                    new_x -= 1
-                elif orientation == 'E':
-                    new_y -= 1
-                elif orientation == 'W':
-                    new_y += 1
+                # Move up by 2
+                for i in range(2):
+                    if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
+                        return False
+                    if orientation == 'N':
+                        new_x += 1
+                    elif orientation == 'S':
+                        new_x -= 1
+                    elif orientation == 'E':
+                        new_y -= 1
+                    elif orientation == 'W':
+                        new_y += 1
 
                 return True
 
             elif direction == 'L':
+                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                    return False
                 # Move backwards by 3 cells
                 for i in range(3):
                     if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
@@ -458,17 +348,18 @@ class AlgoFunctions():
                     new_x, new_y = new_x - 1, new_y - 1
                     orientation = 'N'
                 
-                # Move back by 1
-                if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
-                    return False
-                if orientation == 'N':
-                    new_x += 1
-                elif orientation == 'S':
-                    new_x -= 1
-                elif orientation == 'E':
-                    new_y -= 1
-                elif orientation == 'W':
-                    new_y += 1
+                # Move back by 2
+                for i in range(2):
+                    if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
+                        return False
+                    if orientation == 'N':
+                        new_x += 1
+                    elif orientation == 'S':
+                        new_x -= 1
+                    elif orientation == 'E':
+                        new_y -= 1
+                    elif orientation == 'W':
+                        new_y += 1
                 
                 return True
             return False
@@ -540,46 +431,46 @@ class AlgoFunctions():
             # Check for valid left turns
             if is_valid_front_turn(state.x, state.y, 'L', state.direction):
                 if state.direction == 'N':
-                    successors.append(State(state.x, state.y-4, get_new_direction(state.direction, 'L', 'FW'), 'FL', state))
+                    successors.append(State(state.x-1, state.y-4, get_new_direction(state.direction, 'L', 'FW'), 'FL', state))
                 elif state.direction == 'S':
-                    successors.append(State(state.x, state.y+4, get_new_direction(state.direction, 'L', 'FW'), 'FL', state))
+                    successors.append(State(state.x+1, state.y+4, get_new_direction(state.direction, 'L', 'FW'), 'FL', state))
                 elif state.direction == 'E':
-                    successors.append(State(state.x-4, state.y, get_new_direction(state.direction, 'L', 'FW'), 'FL', state))
+                    successors.append(State(state.x-4, state.y+1, get_new_direction(state.direction, 'L', 'FW'), 'FL', state))
                 elif state.direction == 'W':
-                    successors.append(State(state.x+4, state.y, get_new_direction(state.direction, 'L', 'FW'), 'FL', state))
+                    successors.append(State(state.x+4, state.y-1, get_new_direction(state.direction, 'L', 'FW'), 'FL', state))
 
             # Check for valid right turns
             if is_valid_front_turn(state.x, state.y, 'R', state.direction):
                 if state.direction == 'N':
-                    successors.append(State(state.x, state.y+4, get_new_direction(state.direction, 'R', 'FW'), 'FR', state))
+                    successors.append(State(state.x-1, state.y+4, get_new_direction(state.direction, 'R', 'FW'), 'FR', state))
                 elif state.direction == 'S':
-                    successors.append(State(state.x, state.y-4, get_new_direction(state.direction, 'R', 'FW'), 'FR', state))
+                    successors.append(State(state.x+1, state.y-4, get_new_direction(state.direction, 'R', 'FW'), 'FR', state))
                 elif state.direction == 'E':
-                    successors.append(State(state.x+4, state.y, get_new_direction(state.direction, 'R', 'FW'), 'FR', state))
+                    successors.append(State(state.x+4, state.y+1, get_new_direction(state.direction, 'R', 'FW'), 'FR', state))
                 elif state.direction == 'W':
-                    successors.append(State(state.x-4, state.y, get_new_direction(state.direction, 'R', 'FW'), 'FR', state))
+                    successors.append(State(state.x-4, state.y-1, get_new_direction(state.direction, 'R', 'FW'), 'FR', state))
             
             # Check for valid left turns
             if is_valid_back_turn(state.x, state.y, 'L', state.direction):
                 if state.direction == 'N':
-                    successors.append(State(state.x+4, state.y, get_new_direction(state.direction, 'L', 'BW'), 'BL', state))
+                    successors.append(State(state.x+4, state.y-1, get_new_direction(state.direction, 'L', 'BW'), 'BL', state))
                 elif state.direction == 'S':
-                    successors.append(State(state.x-4, state.y, get_new_direction(state.direction, 'L', 'BW'), 'BL', state))
+                    successors.append(State(state.x-4, state.y+1, get_new_direction(state.direction, 'L', 'BW'), 'BL', state))
                 elif state.direction == 'E':
-                    successors.append(State(state.x, state.y-4, get_new_direction(state.direction, 'L', 'BW'), 'BL', state))
+                    successors.append(State(state.x-1, state.y-4, get_new_direction(state.direction, 'L', 'BW'), 'BL', state))
                 elif state.direction == 'W':
-                    successors.append(State(state.x, state.y+4, get_new_direction(state.direction, 'L', 'BW'), 'BL', state))
+                    successors.append(State(state.x+1, state.y+4, get_new_direction(state.direction, 'L', 'BW'), 'BL', state))
 
             # Check for valid right turns
             if is_valid_back_turn(state.x, state.y, 'R', state.direction):
                 if state.direction == 'N':
-                    successors.append(State(state.x+4, state.y, get_new_direction(state.direction, 'R', 'BW'), 'BR', state))
+                    successors.append(State(state.x+4, state.y+1, get_new_direction(state.direction, 'R', 'BW'), 'BR', state))
                 elif state.direction == 'S':
-                    successors.append(State(state.x-4, state.y, get_new_direction(state.direction, 'R', 'BW'), 'BR', state))
+                    successors.append(State(state.x-4, state.y-1, get_new_direction(state.direction, 'R', 'BW'), 'BR', state))
                 elif state.direction == 'E':
-                    successors.append(State(state.x, state.y-4, get_new_direction(state.direction, 'R', 'BW'), 'BR', state))
+                    successors.append(State(state.x+1, state.y-4, get_new_direction(state.direction, 'R', 'BW'), 'BR', state))
                 elif state.direction == 'W':
-                    successors.append(State(state.x, state.y+4, get_new_direction(state.direction, 'R', 'BW'), 'BR', state))
+                    successors.append(State(state.x-1, state.y+4, get_new_direction(state.direction, 'R', 'BW'), 'BR', state))
             return successors
 
         def get_new_direction(current_direction, turn_direction, move_direction):
@@ -603,18 +494,38 @@ class AlgoFunctions():
                     raise ValueError("Invalid turn direction")
             return directions[new_index]
 
-        def heuristic(state, target):
+        def heuristic(current, state, target):
             turn_penalty = 10  # You can adjust this value based on how much you want to penalize turning
-
+            forward_penalty = -7
+            backwards_penalty = 2
             # Calculate Manhattan distance between current state and target
             distance = abs(state.x - target.x) + abs(state.y - target.y)
 
-            # Penalize turning by adding the turn penalty
-            turns = 0
-            if state.direction != target.direction:
-                turns = 1
-
-            return distance + turn_penalty * turns
+            if state.action == 'FW':
+                if current is not None and current.action == 'BW':
+                    return distance + 1000
+                return distance + forward_penalty
+            if state.action == 'BW':
+                if current is not None and current.action == 'FW':
+                    return distance + 1000
+                return distance + backwards_penalty
+            if state.action == 'BR':
+                if current is not None and current.action == 'FR':
+                    return distance + 1000
+                return distance+turn_penalty
+            if state.action == 'BL':
+                if current is not None and current.action == 'FL':
+                    return distance + 1000
+                return distance+turn_penalty
+            if state.action == 'FR':
+                if current is not None and current.action == 'BR':
+                    return distance + 1000
+                return distance+turn_penalty
+            if state.action == 'FL':
+                if current is not None and current.action == 'BL':
+                    return distance + 1000
+                return distance+turn_penalty
+            return distance
 
 
         # Use the Object3x3 instance to mark the object on the grid
@@ -641,7 +552,7 @@ class AlgoFunctions():
         start_state = State(start[0], start[1], start[2])
         target_state = State(target[0], target[1], target[2])
 
-        start_node = Node(start_state, None, None, 0, heuristic(start_state, target_state))
+        start_node = Node(start_state, None, None, 0, heuristic(None, start_state, target_state))
         priority_queue = [start_node]
 
         while priority_queue:
@@ -657,6 +568,7 @@ class AlgoFunctions():
                 print(path)
                 return None, None
             if current_node.state == target_state:
+                print("eclipsed_time", eclipsed_time)
                 path = []
                 action = ['SNAP']
                 if current_node.parent:
@@ -669,14 +581,14 @@ class AlgoFunctions():
                         ((0, -1), 'E', 'E'): 'BW', ((0, 1), 'W', 'W' ): 'BW',
                         ((-1, 0), 'N', 'N'): 'FW', ((1, 0), 'S', 'S'): 'FW',
                         ((0, 1), 'E', 'E'): 'FW', ((0, -1), 'W', 'W'): 'FW',
-                        ((0, 4), 'N', 'E'): 'FR', ((0, -4), 'S', 'W'): 'FR',
-                        ((4, 0), 'E', 'S'): 'FR', ((-4, 0), 'W', 'N'): 'FR',
-                        ((0, -4), 'N', 'W'): 'FL', ((0, 4), 'S', 'E'): 'FL',
-                        ((-4, 0), 'E', 'N'): 'FL', ((4, 0), 'W', 'S'): 'FL',
-                        ((4, 0), 'N', 'W'): 'BR', ((-4, 0), 'S', 'E'): 'BR',
-                        ((0, 4), 'E', 'N'): 'BR', ((0, -4), 'W', 'S'): 'BR',
-                        ((4, 0), 'N', 'E'): 'BL', ((-4, 0), 'S', 'W'): 'BL',
-                        ((0, 4), 'E', 'S'): 'BL', ((0, -4), 'W', 'N'): 'BL',
+                        ((1, 4), 'N', 'E'): 'FR', ((-1, -4), 'S', 'W'): 'FR',
+                        ((4, 1), 'E', 'S'): 'FR', ((-4, -1), 'W', 'N'): 'FR',
+                        ((-1, -4), 'N', 'W'): 'FL', ((1, 4), 'S', 'E'): 'FL',
+                        ((-4, 1), 'E', 'N'): 'FL', ((4, -1), 'W', 'S'): 'FL',
+                        ((4, 1), 'N', 'W'): 'BR', ((-4, -1), 'S', 'E'): 'BR',
+                        ((1, 4), 'E', 'N'): 'BR', ((-1, -4), 'W', 'S'): 'BR',
+                        ((4, -1), 'N', 'E'): 'BL', ((-4, 1), 'S', 'W'): 'BL',
+                        ((-1, 4), 'E', 'S'): 'BL', ((1, -4), 'W', 'N'): 'BL',
                     }
 
                     # Determine the action based on the relative position and direction
@@ -696,7 +608,7 @@ class AlgoFunctions():
 
             for successor_state in successors:
                 successor_node = Node(successor_state, current_node.state, successor_state.action, current_node.cost + 1,
-                                    heuristic(successor_state, target_state))
+                                    heuristic(current_node.state, successor_state, target_state))
                 successor_node.action = (successor_state.x, successor_state.y, successor_state.direction)
 
                 # Set repeated_move flag
