@@ -1,4 +1,5 @@
 import heapq
+import json
 import time
 
 
@@ -67,9 +68,71 @@ class AlgoFunctions():
                 for row in grid:
                     print(row)
         return None
-    
+
     @staticmethod
-    def NearestNeighbourSearch(obstacles):
+    def count_repeated_commands(action):
+        # Initialize an empty list to store the modified action
+        modified_action = []
+        # Initialize the previous command and its count
+        prev_command = None
+        count =   0
+
+        # Iterate over the action list
+        for command in action:
+            # If the current command is the same as the previous one, increment the count
+            if command == prev_command:
+                count +=   1
+            else:
+                # If the previous command is not None and not 'SNAP' or 'STOP', append it with its count to the modified action
+                if prev_command is not None and prev_command not in ['SNAP', 'STOP']:
+                    # Append the count to the command and pad with a zero at the end if it's a single digit
+                    # For 'FR', 'FL', 'BL', and 'BR', the count is always '00'
+                    if prev_command in ['FR', 'FL', 'BL', 'BR']:
+                        modified_action.append(f"{prev_command}00")
+                    else:
+                        if(count>10):
+                            # Append the first part of the count with  10 to the command
+                            modified_action.append(f"{prev_command}90")
+                            # Append the second part of the count with the remainder to the command
+                            modified_action.append(f"{prev_command}{count -  9}0")
+                        else:
+                            modified_action.append(f"{prev_command}{count}{'0' if count < 10 else ''}")
+                # If the previous command is 'SNAP' or 'STOP', append it without a count
+                elif prev_command in ['SNAP', 'STOP']:
+                    modified_action.append(prev_command)
+                # Reset the count and set the current command as the previous command
+                count =   1
+                prev_command = command
+
+        # Append the last command with its count to the modified action
+        if prev_command is not None and prev_command not in ['SNAP', 'STOP']:
+            # Append the count to the command and pad with a zero at the end if it's a single digit
+            # For 'FR', 'FL', 'BL', and 'BR', the count is always '00'
+            if prev_command in ['FR', 'FL', 'BL', 'BR']:
+                modified_action.append(f"{prev_command}00")
+            else:
+                if(count>10):
+                    # Append the first part of the count with  10 to the command
+                    modified_action.append(f"{prev_command}90")
+                    # Append the second part of the count with the remainder to the command
+                    modified_action.append(f"{prev_command}{count -  9}0")
+                else:
+                    modified_action.append(f"{prev_command}{count}{'0' if count <   10 else ''}")
+        elif prev_command in ['SNAP', 'STOP']:
+            modified_action.append(prev_command)
+
+        return modified_action
+
+
+    @staticmethod
+    def NearestNeighbourSearch(data):
+
+        #print("Checking Output Data:", data)
+
+        obstacles = [(obstacle['x'], obstacle['y'], obstacle['d'], obstacle['id']) for obstacle in data]
+
+        #print("Checking Output Obstacles:", obstacles)
+
         if not obstacles:
             print("No obstacles found.")
             return []
@@ -83,11 +146,35 @@ class AlgoFunctions():
         # Initialize a 20x20 grid with all zeros
         grid = [[' '] * 20 for _ in range(20)]
 
+        temp = []
+
         # Mark obstacles on the grid
         for obstacle in obstacles:
-            x, y, direction = obstacle
-            grid[x][y] = obstacle[2].upper()  # Marking obstacle at the specified position
             
+            obstacle = list(obstacle)
+            obstacle[1] = 20 - obstacle[1]
+            x, y, direction,id = obstacle
+
+            if(obstacle[2] == 0):
+                #grid[x][y] = obstacle[2].upper()  # Marking obstacle at the specified position
+                obstacle[2] = 'N'
+            elif(obstacle[2] == 2):
+                obstacle[2] = 'E'
+            elif(obstacle[2] == 4):
+                obstacle[2] = 'S'
+            else:
+                obstacle[2] = 'W'
+
+            grid[x][y] = obstacle[2]
+
+            obstacle = tuple(obstacle)
+
+            temp.append((y,x,obstacle[2],id))
+
+        obstacles = temp
+
+        print("Fucking chibai kia ", obstacles)
+
         # Create an Object3x3 instance from within the function
         object_instance = Object3x3(center_x=18, center_y=1)
 
@@ -115,7 +202,7 @@ class AlgoFunctions():
                         dist = AlgoFunctions.calculateDistancebtwnCoordinates(starting_coordinates[0], starting_coordinates[1], obstacles[i][0], obstacles[i][1])
                         shortestNode = obstacles[i]
             # print("startingNode", starting_coordinates)
-            # print("ShortestNode", shortestNode)
+            print("ShortestNode", shortestNode)
             start = starting_coordinates
             if shortestNode[2].upper() == 'N':
                 starting_coordinates = (shortestNode[0] - 3, shortestNode[1], 'S')
@@ -130,10 +217,10 @@ class AlgoFunctions():
                 starting_coordinates = (shortestNode[0], shortestNode[1] - 3, 'E')
                 target = (shortestNode[0], shortestNode[1] - 3, 'E')
             # print("targetNode", target)
-            path_result, action_result = AlgoFunctions.AStarSearch(grid, start, target, object_instance.get_positions())
+            path_result, action_result = AlgoFunctions.AStarSearch(grid, start, target, object_instance.get_positions(), shortestNode[3])
             if path_result:
-                path.append(path_result) #?
-                print("Path:", path)
+                path.append((path_result,shortestNode[3])) #?
+                #print("Output Path:", path)
                 obstacles.remove(shortestNode)
                 fail = None
             else:
@@ -142,17 +229,47 @@ class AlgoFunctions():
             # for row in grid:
             #     print(row)
             if action_result:
+                #print('What is action_result: ', action_result)
                 action.append(action_result)
-                print("Action: ", action)
+                #print("Action: ", action)
+
             dist = 999
             shortestNode = []
 
-       # AlgoFunctions.print_grid(path, reference_obstacles)
+            new_action = [j for sub in action for j in sub]
+
+        new_action.append('STOP')
+
+        modified_action = AlgoFunctions.count_repeated_commands(new_action)
+
+        json_action = {"data":{'path':path,'distance':0,'commands': str(modified_action)}}
+
+        print("Checking Json:", json_action)
+
+        # AlgoFunctions.print_grid(path, reference_obstacles)
+
+        ########################################################################
+        ########################################################################
+        ########################################################################
+        ########################################################################
+        ########################################################################
+
+        # Run this return to return json of commands instead of path & grid
+        
+        return json_action
+
+        # Make sure to command out the below return path, even though redundant
+
+        ########################################################################
+        ########################################################################
+        ########################################################################
+        ########################################################################
+        ########################################################################
 
         return path, grid
 
     @staticmethod
-    def AStarSearch(grid, start, target, object_positions, timeout = 30):
+    def AStarSearch(grid, start, target, object_positions, obj_id, timeout = 30):
 
         def is_valid_move(x, y, direction, orientation, grid):
             # Forward movement
@@ -176,8 +293,6 @@ class AlgoFunctions():
                 elif orientation == 'W' and (y+3 < 20) and (0<x<=18) and all(grid[j][y+3] in (' ', 'C') for j in range(x - 1, x + 2)):
                     return True
             return False
-
-
 
         def is_valid_front_turn(x, y, direction, orientation):
             new_x = x
@@ -336,16 +451,16 @@ class AlgoFunctions():
 
                 # Rotate clockwise
                 if orientation == 'N':
-                    new_x, new_y = new_x + 1, new_y + 1
+                    new_x, new_y = new_x - 1, new_y + 1
                     orientation = 'E'
                 elif orientation == 'S':
-                    new_x, new_y = new_x - 1, new_y - 1
+                    new_x, new_y = new_x + 1, new_y - 1
                     orientation = 'W'
                 elif orientation == 'E':
-                    new_x, new_y = new_x + 1, new_y + 1
+                    new_x, new_y = new_x + 1, new_y - 1
                     orientation = 'S'
                 elif orientation == 'W':
-                    new_x, new_y = new_x - 1, new_y - 1
+                    new_x, new_y = new_x - 1, new_y + 1
                     orientation = 'N'
                 
                 # Move back by 2
@@ -363,7 +478,6 @@ class AlgoFunctions():
                 
                 return True
             return False
-
 
 
         class State:
@@ -495,9 +609,9 @@ class AlgoFunctions():
             return directions[new_index]
 
         def heuristic(current, state, target):
-            turn_penalty = 10  # You can adjust this value based on how much you want to penalize turning
-            forward_penalty = -7
-            backwards_penalty = 2
+            turn_penalty = 35  # You can adjust this value based on how much you want to penalize turning
+            forward_penalty = -15
+            backwards_penalty = 15
             # Calculate Manhattan distance between current state and target
             distance = abs(state.x - target.x) + abs(state.y - target.y)
 
@@ -570,6 +684,7 @@ class AlgoFunctions():
             if current_node.state == target_state:
                 print("eclipsed_time", eclipsed_time)
                 path = []
+                temp = 'SNAP' + str(obj_id) + '_C'
                 action = ['SNAP']
                 if current_node.parent:
                     parent_state = current_node.parent
