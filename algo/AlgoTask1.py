@@ -406,10 +406,10 @@ class AlgoFunctions():
                     
                 # Rotate counterclockwise
                 if orientation == 'N':
-                    new_x, new_y = new_x - 1, new_y - 1
+                    new_x, new_y = new_x + 1, new_y - 1
                     orientation = 'W'
                 elif orientation == 'S':
-                    new_x, new_y = new_x + 1, new_y + 1
+                    new_x, new_y = new_x - 1, new_y + 1
                     orientation = 'E'
                 elif orientation == 'E':
                     new_x, new_y = new_x - 1, new_y - 1
@@ -451,10 +451,10 @@ class AlgoFunctions():
 
                 # Rotate clockwise
                 if orientation == 'N':
-                    new_x, new_y = new_x - 1, new_y + 1
+                    new_x, new_y = new_x + 1, new_y + 1
                     orientation = 'E'
                 elif orientation == 'S':
-                    new_x, new_y = new_x + 1, new_y - 1
+                    new_x, new_y = new_x - 1, new_y - 1
                     orientation = 'W'
                 elif orientation == 'E':
                     new_x, new_y = new_x + 1, new_y - 1
