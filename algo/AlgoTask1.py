@@ -701,9 +701,9 @@ class AlgoFunctions():
                         ((-1, -4), 'N', 'W'): 'FL', ((1, 4), 'S', 'E'): 'FL',
                         ((-4, 1), 'E', 'N'): 'FL', ((4, -1), 'W', 'S'): 'FL',
                         ((4, 1), 'N', 'W'): 'BR', ((-4, -1), 'S', 'E'): 'BR',
-                        ((1, 4), 'E', 'N'): 'BR', ((-1, -4), 'W', 'S'): 'BR',
+                        ((1, -4), 'E', 'N'): 'BR', ((-1, 4), 'W', 'S'): 'BR',
                         ((4, -1), 'N', 'E'): 'BL', ((-4, 1), 'S', 'W'): 'BL',
-                        ((-1, 4), 'E', 'S'): 'BL', ((1, -4), 'W', 'N'): 'BL',
+                        ((-1, -4), 'E', 'S'): 'BL', ((1, 4), 'W', 'N'): 'BL',
                     }
 
                     # Determine the action based on the relative position and direction
