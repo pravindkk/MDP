@@ -72,61 +72,60 @@ class AlgoFunctions():
         return None
 
     @staticmethod
-    def count_repeated_commands(action):
-        # Initialize an empty list to store the modified action
-        modified_action = []
-        # Initialize the previous command and its count
-        prev_command = None
-        count = 0
-
-        # Iterate over the action list
-        for command in action:
-            # If the current command is the same as the previous one, increment the count
-            if command == prev_command:
-                count += 1
-            else:
-                # If the previous command is not None and not 'SNAP' or 'STOP', append it with its count to the modified action
-                if prev_command is not None and prev_command != 'STOP' and not prev_command.startswith('SNAP'):
-                    # Append the count to the command and pad with a zero at the end if it's a single digit
-                    # For 'FR', 'FL', 'BL', and 'BR', the count is always '00'
-                    if prev_command in ['FR', 'FL', 'BL', 'BR']:
-                        modified_action.append(f"{prev_command}00")
-                    else:
-                        if (count > 10):
-                            # Append the first part of the count with  10 to the command
-                            modified_action.append(f"{prev_command}90")
-                            # Append the second part of the count with the remainder to the command
-                            modified_action.append(
-                                f"{prev_command}{count -  9}0")
-                        else:
-                            modified_action.append(
-                                f"{prev_command}{count}{'0' if count < 10 else ''}")
-                # If the previous command is 'SNAP' or 'STOP', append it without a count
-                elif prev_command is not None and (prev_command == 'STOP' or prev_command.startswith('SNAP')):
-                    modified_action.append(prev_command)
-                # Reset the count and set the current command as the previous command
-                count = 1
-                prev_command = command
-
-        # Append the last command with its count to the modified action
-        if prev_command is not None and prev_command != 'STOP' and not prev_command.startswith('SNAP'):
-            # Append the count to the command and pad with a zero at the end if it's a single digit
-            # For 'FR', 'FL', 'BL', and 'BR', the count is always '00'
-            print("Checking Previous Commands 2:", prev_command)
-            if prev_command in ['FR', 'FL', 'BL', 'BR']:
-                modified_action.append(f"{prev_command}00")
-            else:
-                if (count > 10):
-                    # Append the first part of the count with  10 to the command
-                    modified_action.append(f"{prev_command}90")
-                    # Append the second part of the count with the remainder to the command
-                    modified_action.append(f"{prev_command}{count -  9}0")
-                else:
-                    modified_action.append(
-                        f"{prev_command}{count}{'0' if count <   10 else ''}")
-        elif prev_command is not None and (prev_command == 'STOP' or prev_command.startswith('SNAP')):
-            modified_action.append(prev_command)
-
+    def count_repeated_commands(action): 
+        # Initialize an empty list to store the modified action      
+        modified_action = [] 
+        # Initialize the previous command and its count 
+        prev_command = None 
+        count = 0 
+ 
+        # Iterate over the action list 
+        for command in action:    
+            # If the current command is the same as the previous one, increment the count 
+            if command in ['FW', 'BW'] and command == prev_command: 
+                count += 1 
+            else: 
+                # If the previous command is not None and not 'SNAP' or 'STOP', append it with its count to the modified action 
+                if prev_command is not None and prev_command != 'STOP' and not prev_command.startswith('SNAP'): 
+                    # Append the count to the command and pad with a zero at the end if it's a single digit 
+                    # For 'FR', 'FL', 'BL', and 'BR', the count is always '00' 
+                    if prev_command in ['FR', 'FL', 'BL', 'BR']: 
+                        modified_action.append(f"{prev_command}00") 
+                    else: 
+                        if (count > 10): 
+                            # Append the first part of the count with  10 to the command 
+                            modified_action.append(f"{prev_command}90") 
+                            # Append the second part of the count with the remainder to the command 
+                            modified_action.append( 
+                                f"{prev_command}{count -  9}0") 
+                        else: 
+                            modified_action.append( 
+                                f"{prev_command}{count}{'0' if count < 10 else ''}") 
+                # If the previous command is 'SNAP' or 'STOP', append it without a count 
+                elif prev_command is not None and (prev_command == 'STOP' or prev_command.startswith('SNAP')): 
+                    modified_action.append(prev_command) 
+                # Reset the count and set the current command as the previous command 
+                count = 1 
+                prev_command = command 
+ 
+        # Append the last command with its count to the modified action 
+        if prev_command is not None and prev_command != 'STOP' and not prev_command.startswith('SNAP'): 
+            # Append the count to the command and pad with a zero at the end if it's a single digit 
+            # For 'FR', 'FL', 'BL', and 'BR', the count is always '00' 
+            if prev_command in ['FR', 'FL', 'BL', 'BR']: 
+                modified_action.append(f"{prev_command}00") 
+            else: 
+                if (count > 10): 
+                    # Append the first part of the count with  10 to the command 
+                    modified_action.append(f"{prev_command}90") 
+                    # Append the second part of the count with the remainder to the command 
+                    modified_action.append(f"{prev_command}{count -  9}0") 
+                else: 
+                    modified_action.append( 
+                        f"{prev_command}{count}{'0' if count <   10 else ''}") 
+        elif prev_command is not None and (prev_command == 'STOP' or prev_command.startswith('SNAP')): 
+            modified_action.append(prev_command) 
+ 
         return modified_action
 
     @staticmethod
