@@ -313,17 +313,67 @@ class AlgoFunctions():
             # Check if the turn is valid
             if direction == 'L':
                 # Move up by 2
-                for i in range(2):
-                    if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
-                        return False
-                    if orientation == 'N':
-                        new_x -= 1
-                    elif orientation == 'S':
-                        new_x += 1
-                    elif orientation == 'E':
-                        new_y += 1
-                    elif orientation == 'W':
-                        new_y -= 1
+                # for i in range(2):
+                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x -= 1
+                elif orientation == 'S':
+                    new_x += 1
+                elif orientation == 'E':
+                    new_y += 1
+                elif orientation == 'W':
+                    new_y -= 1
+
+                # Rotate counterclockwise
+                if orientation == 'N':
+                    new_x, new_y = new_x + 1, new_y - 1
+                    orientation = 'W'
+                elif orientation == 'S':
+                    new_x, new_y = new_x - 1, new_y + 1
+                    orientation = 'E'
+                elif orientation == 'E':
+                    new_x, new_y = new_x - 1, new_y - 1
+                    orientation = 'N'
+                elif orientation == 'W':
+                    new_x, new_y = new_x + 1, new_y + 1
+                    orientation = 'S'
+
+                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x -= 1
+                elif orientation == 'S':
+                    new_x += 1
+                elif orientation == 'E':
+                    new_y += 1
+                elif orientation == 'W':
+                    new_y -= 1
+                    
+                # Rotate clockwise
+                if orientation == 'N':
+                    new_x, new_y = new_x + 1, new_y + 1
+                    orientation = 'E'
+                elif orientation == 'S':
+                    new_x, new_y = new_x - 1, new_y - 1
+                    orientation = 'W'
+                elif orientation == 'E':
+                    new_x, new_y = new_x + 1, new_y - 1
+                    orientation = 'S'
+                elif orientation == 'W':
+                    new_x, new_y = new_x - 1, new_y + 1
+                    orientation = 'N'
+                    
+                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x -= 1
+                elif orientation == 'S':
+                    new_x += 1
+                elif orientation == 'E':
+                    new_y += 1
+                elif orientation == 'W':
+                    new_y -= 1
 
                 # Rotate counterclockwise
                 if orientation == 'N':
@@ -340,7 +390,7 @@ class AlgoFunctions():
                     orientation = 'S'
 
                 # Move forward by 3 cells
-                for i in range(4):
+                for i in range(3):
                     if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
                         return False
                     if orientation == 'N':
@@ -356,17 +406,17 @@ class AlgoFunctions():
 
             elif direction == 'R':
                 # Move up by 2
-                for i in range(2):
-                    if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
-                        return False
-                    if orientation == 'N':
-                        new_x -= 1
-                    elif orientation == 'S':
-                        new_x += 1
-                    elif orientation == 'E':
-                        new_y += 1
-                    elif orientation == 'W':
-                        new_y -= 1
+                # for i in range(2):
+                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x -= 1
+                elif orientation == 'S':
+                    new_x += 1
+                elif orientation == 'E':
+                    new_y += 1
+                elif orientation == 'W':
+                    new_y -= 1
                 
                 # Rotate clockwise
                 if orientation == 'N':
@@ -382,8 +432,58 @@ class AlgoFunctions():
                     new_x, new_y = new_x - 1, new_y + 1
                     orientation = 'N'
                 
+                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x -= 1
+                elif orientation == 'S':
+                    new_x += 1
+                elif orientation == 'E':
+                    new_y += 1
+                elif orientation == 'W':
+                    new_y -= 1                
+                
+                # Rotate counterclockwise
+                if orientation == 'N':
+                    new_x, new_y = new_x + 1, new_y - 1
+                    orientation = 'W'
+                elif orientation == 'S':
+                    new_x, new_y = new_x - 1, new_y + 1
+                    orientation = 'E'
+                elif orientation == 'E':
+                    new_x, new_y = new_x - 1, new_y - 1
+                    orientation = 'N'
+                elif orientation == 'W':
+                    new_x, new_y = new_x + 1, new_y + 1
+                    orientation = 'S'                
+                
+                if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x -= 1
+                elif orientation == 'S':
+                    new_x += 1
+                elif orientation == 'E':
+                    new_y += 1
+                elif orientation == 'W':
+                    new_y -= 1
+                
+                # Rotate clockwise
+                if orientation == 'N':
+                    new_x, new_y = new_x + 1, new_y + 1
+                    orientation = 'E'
+                elif orientation == 'S':
+                    new_x, new_y = new_x - 1, new_y - 1
+                    orientation = 'W'
+                elif orientation == 'E':
+                    new_x, new_y = new_x + 1, new_y - 1
+                    orientation = 'S'
+                elif orientation == 'W':
+                    new_x, new_y = new_x - 1, new_y + 1
+                    orientation = 'N'                
+                
                 # Move forward by 3 cells
-                for i in range(4):
+                for i in range(3):
                     if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
                         return False
                     if orientation == 'N':
@@ -405,7 +505,7 @@ class AlgoFunctions():
                 # Move backward by 3 cells
                 if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
                     return False
-                for i in range(3):
+                for i in range(2):
                     if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
                         return False
                     if orientation == 'N':
@@ -431,26 +531,76 @@ class AlgoFunctions():
                     new_x, new_y = new_x + 1, new_y + 1
                     orientation = 'S'
 
-                # Move up by 2
-                for i in range(2):
-                    if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
-                        return False
-                    if orientation == 'N':
-                        new_x += 1
-                    elif orientation == 'S':
-                        new_x -= 1
-                    elif orientation == 'E':
-                        new_y -= 1
-                    elif orientation == 'W':
-                        new_y += 1
+                if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x += 1
+                elif orientation == 'S':
+                    new_x -= 1
+                elif orientation == 'E':
+                    new_y -= 1
+                elif orientation == 'W':
+                    new_y += 1
 
+                # Rotate clockwise
+                if orientation == 'N':
+                    new_x, new_y = new_x + 1, new_y + 1
+                    orientation = 'E'
+                elif orientation == 'S':
+                    new_x, new_y = new_x - 1, new_y - 1
+                    orientation = 'W'
+                elif orientation == 'E':
+                    new_x, new_y = new_x + 1, new_y - 1
+                    orientation = 'S'
+                elif orientation == 'W':
+                    new_x, new_y = new_x - 1, new_y + 1
+                    orientation = 'N'
+
+                # Move back by 1
+                if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x += 1
+                elif orientation == 'S':
+                    new_x -= 1
+                elif orientation == 'E':
+                    new_y -= 1
+                elif orientation == 'W':
+                    new_y += 1
+
+                # Rotate counterclockwise
+                if orientation == 'N':
+                    new_x, new_y = new_x + 1, new_y - 1
+                    orientation = 'W'
+                elif orientation == 'S':
+                    new_x, new_y = new_x - 1, new_y + 1
+                    orientation = 'E'
+                elif orientation == 'E':
+                    new_x, new_y = new_x - 1, new_y - 1
+                    orientation = 'N'
+                elif orientation == 'W':
+                    new_x, new_y = new_x + 1, new_y + 1
+                    orientation = 'S'
+
+                if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x += 1
+                elif orientation == 'S':
+                    new_x -= 1
+                elif orientation == 'E':
+                    new_y -= 1
+                elif orientation == 'W':
+                    new_y += 1
+
+                
                 return True
 
             elif direction == 'L':
                 if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
                     return False
-                # Move backwards by 3 cells
-                for i in range(3):
+                # Move backwards by 2 cells
+                for i in range(2):
                     if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
                         return False
                     if orientation == 'N':
@@ -476,18 +626,67 @@ class AlgoFunctions():
                     new_x, new_y = new_x - 1, new_y + 1
                     orientation = 'N'
                 
-                # Move back by 2
-                for i in range(2):
-                    if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
-                        return False
-                    if orientation == 'N':
-                        new_x += 1
-                    elif orientation == 'S':
-                        new_x -= 1
-                    elif orientation == 'E':
-                        new_y -= 1
-                    elif orientation == 'W':
-                        new_y += 1
+                if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x += 1
+                elif orientation == 'S':
+                    new_x -= 1
+                elif orientation == 'E':
+                    new_y -= 1
+                elif orientation == 'W':
+                    new_y += 1
+
+                # Rotate counterclockwise
+                if orientation == 'N':
+                    new_x, new_y = new_x + 1, new_y - 1
+                    orientation = 'W'
+                elif orientation == 'S':
+                    new_x, new_y = new_x - 1, new_y + 1
+                    orientation = 'E'
+                elif orientation == 'E':
+                    new_x, new_y = new_x - 1, new_y - 1
+                    orientation = 'N'
+                elif orientation == 'W':
+                    new_x, new_y = new_x + 1, new_y + 1
+                    orientation = 'S'
+                
+                # Move back by 1
+                if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x += 1
+                elif orientation == 'S':
+                    new_x -= 1
+                elif orientation == 'E':
+                    new_y -= 1
+                elif orientation == 'W':
+                    new_y += 1                
+                
+                # Rotate clockwise
+                if orientation == 'N':
+                    new_x, new_y = new_x + 1, new_y + 1
+                    orientation = 'E'
+                elif orientation == 'S':
+                    new_x, new_y = new_x - 1, new_y - 1
+                    orientation = 'W'
+                elif orientation == 'E':
+                    new_x, new_y = new_x + 1, new_y - 1
+                    orientation = 'S'
+                elif orientation == 'W':
+                    new_x, new_y = new_x - 1, new_y + 1
+                    orientation = 'N'
+                
+                if not is_valid_move(new_x, new_y, 'BW', orientation, grid):
+                    return False
+                if orientation == 'N':
+                    new_x += 1
+                elif orientation == 'S':
+                    new_x -= 1
+                elif orientation == 'E':
+                    new_y -= 1
+                elif orientation == 'W':
+                    new_y += 1
                 
                 return True
             return False
