@@ -1,6 +1,6 @@
 import time
 from algo.algo import MazeSolver
-from algo.AlgoTask1 import AlgoFunctions 
+from algo.AlgoTask1Out import AlgoFunctions 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from model import *

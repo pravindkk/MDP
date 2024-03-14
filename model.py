@@ -9,6 +9,7 @@ import random
 import string
 import numpy as np
 import random
+import torchvision.transforms.functional as TF
 
 name_to_id = {
     "NA": 'NA',
@@ -106,6 +107,11 @@ def load_model():
     """
     #model = torch.hub.load('./', 'custom', path='YOLOv5_new.pt', source='local')
     model = torch.hub.load('./', 'custom', path='best.pt', source='local')
+    for param in model.parameters():
+        # Convert the parameter's data type to float
+        param.data = param.data.float()
+    # model = model.float()
+    model.to(torch.float32)
     return model
 
 def draw_own_bbox(img,x1,y1,x2,y2,label,color=(36,255,12),text_color=(0,0,0)):
@@ -279,7 +285,8 @@ def predict_image_week_9(image, model):
     # Load the image
     img = Image.open(os.path.join('uploads', image))
     # Run inference
-    results = model(img)
+    img = TF.to_tensor(img).float()
+    results = model(img.unsqueeze(0))
     print(results)
     # Save the results
     results.save('runs')

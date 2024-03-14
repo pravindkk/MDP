@@ -398,7 +398,7 @@ class AlgoFunctions():
                 return True
 
             elif direction == 'R':
-                # Move up by 1
+                # Move up by 1  
                 if not is_valid_move(new_x, new_y, 'FW', orientation, grid):
                     return False
                 new_x, new_y, orientation = move_front(new_x, new_y, orientation)
