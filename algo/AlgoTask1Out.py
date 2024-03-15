@@ -92,7 +92,7 @@ class AlgoFunctions():
                     if prev_command in ['FR', 'FL', 'BL', 'BR']: 
                         modified_action.append(f"{prev_command}20") 
                     else: 
-                        if (count > 10): 
+                        if (count >= 10): 
                             # Append the first part of the count with  10 to the command 
                             modified_action.append(f"{prev_command}90") 
                             # Append the second part of the count with the remainder to the command 
@@ -115,14 +115,14 @@ class AlgoFunctions():
             if prev_command in ['FR', 'FL', 'BL', 'BR']: 
                 modified_action.append(f"{prev_command}20") 
             else: 
-                if (count > 10): 
+                if (count >= 10): 
                     # Append the first part of the count with  10 to the command 
                     modified_action.append(f"{prev_command}90") 
                     # Append the second part of the count with the remainder to the command 
                     modified_action.append(f"{prev_command}{count -  9}0") 
                 else: 
                     modified_action.append( 
-                        f"{prev_command}{count}{'0' if count <   10 else ''}") 
+                        f"{prev_command}{count}{'0' if count < 10 else ''}") 
         elif prev_command is not None and (prev_command == 'STOP' or prev_command.startswith('SNAP')): 
             modified_action.append(prev_command) 
  
@@ -719,7 +719,7 @@ class AlgoFunctions():
                 return None, None
             if current_node.state == target_state:
                 path = []
-                # action = []
+                #action = []
                 #### Commented it out coz we no image rec###
                 temp = str("SNAP" + str(obs_id) + "_C")
                 action = [temp]
